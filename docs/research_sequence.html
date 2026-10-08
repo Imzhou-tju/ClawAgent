@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>ClawAgent 多智能体调研时序图</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  #canvas { background: #ffffff; padding: 18px; display: inline-block; }
+  .panel { margin: 0 0 16px 0; }
+  .panel-title {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    font-size: 16px; font-weight: 700; color: #0f172a;
+    margin: 4px 0 10px 2px;
+  }
+</style>
+</head>
+<body>
+<div id="canvas">
+
+  <div class="panel">
+    <div class="panel-title">① 规划 → 并发执行</div>
+    <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    participant U as 调用方<br/>CLI / Dashboard
+    participant P as planner<br/>LLM
+    participant S as scheduler<br/>确定性
+    participant R as researcher ×N<br/>LLM
+    participant T as 检索工具
+
+    Note over U,T: 主 Agent 循环经 deep_research 进入子图
+    U->>P: 触发调研
+    P->>P: select_sop 选 SOP
+    P->>P: 调模型拆 3–6 个任务
+    P->>P: Plan Gate 规则校验
+    Note over P: ALLOW / ALLOW_WITH_WARNINGS / REJECT
+    P->>S: goto=scheduler
+    loop DAG 里还有 READY 任务
+        S->>R: Send(task) ×N
+        R->>T: 三路混合检索
+        T-->>R: 原始结果
+        R->>R: 调模型抽 claim 与引文
+        R-->>S: 回填 ResearchPacket
+    end
+    Note over S: 无 READY 任务 → 进 aggregator（见下图）
+    </pre>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">② 汇总 → 评审 → 补查 → 成文</div>
+    <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    participant S as scheduler<br/>确定性
+    participant A as aggregator<br/>确定性
+    participant V as review<br/>LLM
+    participant F as repair<br/>确定性
+    participant J as judge<br/>规则裁决
+    participant C as compiler<br/>LLM
+
+    Note over S,C: 只有 review 与 compiler 调模型
+    A->>A: 推导声明支撑状态
+    A->>V: 移交全局结论
+    V->>V: 冲突 / 未支撑（确定性）
+    V->>V: 调模型出 issues
+    V->>F: review → repair
+    F->>F: 增删任务 ≤ MAX_REPAIR_TASKS
+    F->>J: repair → judge
+    J->>J: 规则裁决（不调模型）
+    alt REVISE
+        J->>S: 回调度器补查
+    else COMPILE / ABORT
+        J->>C: 成文或带限制成文
+    end
+    C->>C: 校验引用编号
+    Note over C: 输出 Markdown 报告，回到主 Agent 循环
+    </pre>
+  </div>
+
+</div>
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "default",
+    fontFamily: '"Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif',
+    sequence: { useMaxWidth: false, wrap: false, actorMargin: 45, boxMargin: 8, mirrorActors: true, noteMargin: 8 },
+    themeVariables: { fontSize: "15px" }
+  });
+</script>
+</body>
+</html>

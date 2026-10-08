@@ -156,6 +156,14 @@ MINERU_API_KEY=your_key
 - `judge` 用 `Command` 路由：回 `scheduler` 补查，或进 `compiler` 成文。
 - 节点级另有重试策略：LLM 类 3 次、网络类 2 次。
 
+**一次调研调用的时序（`deep_research`）：**
+
+![多智能体调研时序图（deep_research）](docs/research_sequence.png)
+
+- 8 个节点里只有 4 个调模型：`planner`、`researcher`、`review`、`compiler`；`scheduler`、`aggregator`、`repair`、`judge` 全是确定性代码。
+- 检索与抽取都在 `researcher` 内部：三路混合检索 → 调模型抽 claim 与逐字引文 → 回填 `ResearchPacket`，一批跑完回 `scheduler` 再放下一批。
+- `judge` 不调模型，只看还有没有 READY 任务、轮次是否到顶、有没有可用声明、以及是否连续两轮无新证据。
+
 ---
 
 ## 🧩 子系统详解
