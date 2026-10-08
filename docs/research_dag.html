@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>ClawAgent 多智能体调研子图</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #eef2f6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 16px;
+            color: #1a202c;
+        }
+        .canvas-card {
+            width: 960px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #cbd5e1;
+            padding: 20px 16px;
+            display: flex;
+            justify-content: center;
+        }
+        svg { width: 100%; height: auto; max-width: 928px; overflow: visible; }
+    </style>
+</head>
+<body>
+
+    <div class="canvas-card">
+        <svg viewBox="0 0 900 840" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 1 2 L 7 5 L 1 8 z" fill="#000000" />
+                </marker>
+            </defs>
+
+            <!-- 标题 -->
+            <text x="450" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#0f172a">多智能体调研子图（deep_research）· 8 节点</text>
+
+            <!-- START -->
+            <rect x="395" y="54" width="110" height="34" rx="17" fill="#e2e8f0" stroke="#000000" stroke-width="1.8" />
+            <text x="450" y="76" text-anchor="middle" font-size="14" font-weight="bold" fill="#000">START</text>
+
+            <!-- planner -->
+            <rect x="310" y="106" width="280" height="76" rx="12" fill="#cfe2f3" stroke="#000000" stroke-width="1.8" />
+            <text x="450" y="130" text-anchor="middle" font-size="15" font-weight="bold" fill="#000">planner</text>
+            <text x="450" y="150" text-anchor="middle" font-size="11.5" fill="#000">选 SOP → 拆 3–6 个带依赖的任务</text>
+            <text x="450" y="168" text-anchor="middle" font-size="11" fill="#000">Plan Gate：规则校验 → 修补 → LLM 评审 → 三态裁决</text>
+
+            <!-- scheduler -->
+            <rect x="320" y="236" width="260" height="62" rx="12" fill="#cfe2f3" stroke="#000000" stroke-width="1.8" />
+            <text x="450" y="260" text-anchor="middle" font-size="15" font-weight="bold" fill="#000">scheduler</text>
+            <text x="450" y="280" text-anchor="middle" font-size="11.5" fill="#000">纯调度 · 不调模型 · 只派发 READY 任务</text>
+
+            <!-- researcher -->
+            <rect x="50" y="230" width="240" height="76" rx="12" fill="#e2d6ec" stroke="#000000" stroke-width="1.8" />
+            <text x="170" y="254" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#000">researcher ×N（并发）</text>
+            <text x="170" y="274" text-anchor="middle" font-size="11.5" fill="#000">学术 MCP + Tavily + 本地 RAG</text>
+            <text x="170" y="292" text-anchor="middle" font-size="11.5" fill="#000">登记来源 / 引文 / 声明</text>
+
+            <!-- aggregator -->
+            <rect x="320" y="340" width="260" height="62" rx="12" fill="#fde2e2" stroke="#000000" stroke-width="1.8" />
+            <text x="450" y="364" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#000">aggregator · 确定性</text>
+            <text x="450" y="384" text-anchor="middle" font-size="11.5" fill="#000">按引文校验推导每条声明的支撑状态</text>
+
+            <!-- review -->
+            <rect x="320" y="430" width="260" height="58" rx="12" fill="#fff2cc" stroke="#000000" stroke-width="1.8" />
+            <text x="450" y="454" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#000">review</text>
+            <text x="450" y="474" text-anchor="middle" font-size="11.5" fill="#000">LLM 出结构化问题：缺证 / 冲突 / 漏洞</text>
+
+            <!-- repair -->
+            <rect x="320" y="516" width="260" height="58" rx="12" fill="#fff2cc" stroke="#000000" stroke-width="1.8" />
+            <text x="450" y="540" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#000">repair · 确定性</text>
+            <text x="450" y="560" text-anchor="middle" font-size="11.5" fill="#000">按问题局部增删 / 重开任务</text>
+
+            <!-- judge -->
+            <rect x="320" y="602" width="260" height="58" rx="12" fill="#fde2e2" stroke="#000000" stroke-width="1.8" />
+            <text x="450" y="626" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#000">judge · 规则裁决（不调模型）</text>
+            <text x="450" y="646" text-anchor="middle" font-size="11.5" fill="#000">看还有无可执行任务 / 可用声明</text>
+
+            <!-- compiler -->
+            <rect x="310" y="690" width="280" height="58" rx="12" fill="#f4b899" stroke="#000000" stroke-width="1.8" />
+            <text x="450" y="714" text-anchor="middle" font-size="14" font-weight="bold" fill="#000">compiler</text>
+            <text x="450" y="734" text-anchor="middle" font-size="11.5" fill="#000">校验引用编号 → 带引用的 Markdown 报告</text>
+
+            <!-- END -->
+            <rect x="395" y="780" width="110" height="34" rx="17" fill="#e2e8f0" stroke="#000000" stroke-width="1.8" />
+            <text x="450" y="802" text-anchor="middle" font-size="14" font-weight="bold" fill="#000">END</text>
+
+            <!-- 连线 -->
+            <g fill="none" stroke="#000" stroke-width="2">
+                <path d="M 450 88 L 450 106" marker-end="url(#arrow)" />
+                <path d="M 450 182 L 450 236" marker-end="url(#arrow)" />
+                <path d="M 320 258 L 292 258" marker-end="url(#arrow)" />
+                <path d="M 290 282 L 318 282" marker-end="url(#arrow)" />
+                <path d="M 450 298 L 450 340" marker-end="url(#arrow)" />
+                <path d="M 450 402 L 450 430" marker-end="url(#arrow)" />
+                <path d="M 450 488 L 450 516" marker-end="url(#arrow)" />
+                <path d="M 450 574 L 450 602" marker-end="url(#arrow)" />
+                <path d="M 450 660 L 450 690" marker-end="url(#arrow)" />
+                <path d="M 450 748 L 450 780" marker-end="url(#arrow)" />
+                <path d="M 580 631 L 660 631 L 660 267 L 583 267" marker-end="url(#arrow)" />
+            </g>
+
+            <!-- 连线标注 -->
+            <text x="170" y="220" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1d4ed8">Send ×N（依赖已满足）</text>
+            <text x="170" y="322" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1d4ed8">一批完成 → 回调度器</text>
+            <text x="466" y="322" font-size="11.5" font-weight="bold" fill="#1d4ed8">无 READY 任务</text>
+            <text x="666" y="380" font-size="11.5" font-weight="bold" fill="#1d4ed8">REVISE 补查</text>
+            <text x="472" y="678" font-size="11.5" font-weight="bold" fill="#1d4ed8">COMPILE / ABORT</text>
+        </svg>
+    </div>
+
+</body>
+</html>

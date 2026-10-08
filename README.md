@@ -126,6 +126,8 @@ MINERU_API_KEY=your_key
 
 ## 🏗️ 系统架构
 
+![ClawAgent 整体架构（分层拓扑）](docs/architect.png)
+
 ```
                     ┌──────────────────────────────┐
   用户 ────────────▶│   主 Agent 循环（LangGraph）    │
@@ -148,21 +150,7 @@ MINERU_API_KEY=your_key
 
 **多智能体调研子图（`deep_research`）：**
 
-```
-START → planner ──▶ scheduler ──[Send fan-out]──▶ researcher×N
-                        ▲                              │
-                        └──────────────────────────────┘
-                        │（依赖已满足的一批任务，逐个 Send）
-                        ▼
-              aggregator ──▶ review ──▶ repair ──▶ judge
-                                                     │
-                        ┌────────────────────────────┤
-                        ▼                            ▼
-                   scheduler（局部补查）          compiler ──▶ END
-                                                     │
-                                                     ▼
-                                    报告（引用编号 + 声明支撑状态）
-```
+![多智能体调研子图（deep_research）](docs/research_dag.png)
 
 - `scheduler` 只派发依赖已满足的 READY 任务，不是一次性全量并发。
 - `judge` 用 `Command` 路由：回 `scheduler` 补查，或进 `compiler` 成文。
