@@ -4,13 +4,13 @@
 
 ### **科研智能助手 · 可溯源的调研与知识库问答**
 
-导航: [简介](#-简介) · [核心能力](#-核心能力) · [快速开始](#-快速开始) · [系统架构](#-系统架构) · [子系统详解](#-子系统详解) · [内置工具](#-内置工具) · [配置](#-配置) · [目录结构](#-目录结构) · [文档](#-文档索引)
+导航: [简介](#简介) · [核心能力](#核心能力) · [快速开始](#快速开始) · [系统架构](#系统架构) · [子系统详解](#子系统详解) · [内置工具](#内置工具) · [配置](#配置) · [目录结构](#目录结构) · [文档](#文档索引)
 
 </div>
 
 ---
 
-## 📖 简介
+## 简介
 
 ClawAgent 是一个面向科研场景的智能体运行时，基于 **LangGraph** 构建。它解决的是两个具体问题：
 
@@ -27,7 +27,7 @@ ClawAgent 是一个面向科研场景的智能体运行时，基于 **LangGraph*
 
 ---
 
-## 🌟 核心能力
+## 核心能力
 
 | 能力 | 实现要点 |
 |------|---------|
@@ -46,9 +46,9 @@ ClawAgent 是一个面向科研场景的智能体运行时，基于 **LangGraph*
 
 ---
 
-## 🚀 快速开始
+## 快速开始
 
-### 1️⃣ 安装
+### 1. 安装
 
 ```bash
 git clone <你的仓库地址>
@@ -62,7 +62,7 @@ pip install -e .
 > 可选外部依赖：**Docker**（Shell 沙盒工具）、**uv**（`pip install uv`，学术 MCP server 由 `uvx` 按需拉起）。
 > 缺这两个依赖不影响主流程，对应工具会自动跳过或降级。
 
-### 2️⃣ 配置
+### 2. 配置
 
 ```bash
 clawgent config    # 交互式向导，自动测试连接
@@ -80,9 +80,9 @@ OPENAI_API_KEY=sk-xxx
 OPENAI_API_BASE=https://dashscope.aliyuncs.com/compatible-mode/v1
 ```
 
-完整配置项见 [配置](#-配置) 一节。
+完整配置项见 [配置](#配置) 一节。
 
-### 3️⃣ 启动
+### 3. 启动
 
 ```bash
 clawgent                    # 交互式对话终端
@@ -98,7 +98,7 @@ Dashboard 提供一次 Research Run 的完整追踪：Run 列表 / 总览指标�
 
 详见 [docs/OBSERVABILITY.md](docs/OBSERVABILITY.md)。
 
-### 4️⃣ 可选：开启学术检索
+### 4. 可选：开启学术检索
 
 ```bash
 # .env
@@ -112,7 +112,7 @@ uvx arxiv-mcp-server --help   # 验证 arXiv MCP 可用
 
 启用后，对话中直接说「查一下 arXiv 上关于 Mamba 架构的论文」即可。单个 MCP server 连接失败自动跳过，不阻断其余源。
 
-### 5️⃣ 可选：高质量 PDF 解析
+### 5. 可选：高质量 PDF 解析
 
 ```bash
 # .env（学术 PDF 含公式/双栏时推荐）
@@ -124,7 +124,7 @@ MINERU_API_KEY=your_key
 
 ---
 
-## 🏗️ 系统架构
+## 系统架构
 
 ![ClawAgent 整体架构（分层拓扑）](docs/architect.png)
 
@@ -166,9 +166,9 @@ MINERU_API_KEY=your_key
 
 ---
 
-## 🧩 子系统详解
+## 子系统详解
 
-### 🔬 多智能体调研（[core/research/](clawgent/core/research/)）
+### 多智能体调研（[core/research/](clawgent/core/research/)）
 
 `deep_research` 工具触发独立 LangGraph 子图：
 
@@ -192,7 +192,7 @@ MINERU_API_KEY=your_key
 
 详见 [docs/DEEP_RESEARCH_README.md](docs/DEEP_RESEARCH_README.md)。
 
-### 📄 Agentic RAG（[core/rag/](clawgent/core/rag/)）
+### Agentic RAG（[core/rag/](clawgent/core/rag/)）
 
 两级分流：
 
@@ -209,7 +209,7 @@ MINERU_API_KEY=your_key
 
 详见 [docs/RAG_README.md](docs/RAG_README.md)。
 
-### 📊 监控、审计与 Dashboard（[core/audit.py](clawgent/core/audit.py) + [core/dashboard/](clawgent/core/dashboard/)）
+### 监控、审计与 Dashboard（[core/audit.py](clawgent/core/audit.py) + [core/dashboard/](clawgent/core/dashboard/)）
 
 统一 `AuditEvent`（含 run/node/task 层级、耗时、状态、错误），7 类共 20+ 事件：
 
@@ -232,7 +232,7 @@ MINERU_API_KEY=your_key
 
 详见 [docs/OBSERVABILITY.md](docs/OBSERVABILITY.md)。
 
-### 🧠 运行时底座（[core/agent.py](clawgent/core/agent.py)）
+### 运行时底座（[core/agent.py](clawgent/core/agent.py)）
 
 - **主循环**：ReAct 节点 + ToolNode，`tools_condition` 判断本轮是否要调工具。
 - **上下文裁剪**：`trim_context_messages(trigger_turns=40, keep_turns=10)`，按完整对话回合裁剪，保留最近 10 轮。
@@ -241,7 +241,7 @@ MINERU_API_KEY=your_key
 
 ---
 
-## 🔧 内置工具
+## 内置工具
 
 | 工具 | 功能 |
 |------|------|
@@ -262,7 +262,7 @@ MINERU_API_KEY=your_key
 
 ---
 
-## ⚙️ 配置
+## 配置
 
 所有配置读自 `.env`（`python-dotenv` 加载），默认值见 [clawgent/core/config.py](clawgent/core/config.py)。
 
@@ -295,7 +295,7 @@ MINERU_API_KEY=your_key
 
 ---
 
-## 📁 目录结构
+## 目录结构
 
 ```
 ClawAgent/
@@ -363,7 +363,7 @@ ClawAgent/
 
 ---
 
-## ✅ 测试
+## 测试
 
 ```bash
 python -m pytest tests/ -q
@@ -373,7 +373,7 @@ python -m pytest tests/ -q
 
 ---
 
-## 📚 文档索引
+## 文档索引
 
 | 文档 | 内容 |
 |------|------|
@@ -386,12 +386,12 @@ python -m pytest tests/ -q
 
 ---
 
-## 📄 License
+## License
 
 [MIT](LICENSE) · 受 [OpenClaw](https://github.com/openclaw/openclaw) 启发。
 
 <div align="center">
 
-**👾 ClawAgent · 科研智能助手 · 可溯源的调研与知识库问答**
+**ClawAgent · 科研智能助手 · 可溯源的调研与知识库问答**
 
 </div>
